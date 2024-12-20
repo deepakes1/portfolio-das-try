@@ -106,7 +106,9 @@ app.post("/api/personal-info", upload.single("profilePicture"), async (req, res)
 
 
 
-
+app.get("/", async (req, res) => {
+  res.send("Hello World");
+});
 
 
 // API endpoint to get user data
