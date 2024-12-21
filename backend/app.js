@@ -13,6 +13,9 @@ const multer = require("multer");
 const path = require("path");
 app.use(express.urlencoded({ extended: true }));
 
+
+
+
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
   ssl: { rejectUnauthorized: false },
@@ -29,7 +32,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.post("/api/personal-info", upload.single("profilePicture"), async (req, res) => {
   const { user_id, firstName, lastName, mobileNumber, location, professionalTitle, customTitle, summary, socialLinks, emailAddress } = req.body;
