@@ -1,13 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-    darkMode: ["class"],
+export default {
     content: [
-        "./src/**/*.{js,jsx,ts,tsx}",
         "./index.html",
-        // Adding more common paths to ensure all content is processed
-        "./app/**/*.{js,jsx,ts,tsx}",
-        "./components/**/*.{js,jsx,ts,tsx}",
-        "./pages/**/*.{js,jsx,ts,tsx}"
+        "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
@@ -34,14 +29,6 @@ module.exports = {
             }
         }
     },
-    plugins: [],
-    future: {
-        hoverOnlyWhenSupported: true,
-    },
-    // Adding safelist for dynamic classes if you're using them
-    safelist: [
-        {
-            pattern: /^(.*?)/,
-        },
-    ],
+    darkMode: ['class'],
+    plugins: []
 }
