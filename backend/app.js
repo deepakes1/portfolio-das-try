@@ -430,11 +430,6 @@ app.post('/submit-education', async (req, res) => {
   }
 });
 
-
-
-
-
-
 app.get('/api/education/:userId', async (req, res) => {
   const { userId } = req.params; // Get userId from URL parameters
 

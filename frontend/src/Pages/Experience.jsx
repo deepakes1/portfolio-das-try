@@ -514,7 +514,7 @@ const Loader = () => (
 );
 
   return (
-    <div className="container md:mx-auto md:px-4 md:py-8">
+    <div className="container md:min-h-screen md:mx-auto md:px-4 md:py-8">
     {isFetching ? (
         <div className="flex items-center justify-center">
           {/* Spinner */}

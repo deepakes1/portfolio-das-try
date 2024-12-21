@@ -8,12 +8,18 @@ import home_charts from "../assets/home_charts.png";
 import 'animate.css';
 
 const FeatureCard = ({ imgSrc, title, description, altText }) => (
-  <div className="flex hover:shadow-lg cursor-pointer transition-all hover:scale-105 flex-col items-center text-center p-6 shadow-md rounded-lg">
-    <img src={imgSrc} alt={altText} className="mb-4" />
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+  <div className="flex hover:bg-gray-900 hover:text-white hover:shadow-lg cursor-pointer transition-all hover:scale-105 flex-col items-center text-center p-6 shadow-md rounded-lg relative overflow-hidden group">
+    {/* Hover effect only applies to the individual card when hovering */}
+    <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300 bg-black"></div>
+    <img src={imgSrc} alt={altText} className="mb-4 z-10 transition-all duration-300 group-hover:scale-105 group-hover:opacity-80" />
+    <h3 className="  text-xl text-black group-hover:text-white font-semibold mb-2 z-10 transition-all duration-300">{title}</h3>
+    <p className=" group-hover:text-gray-300 text-black z-10 transition-all duration-300">{description}</p>
   </div>
 );
+
+
+
+
 
 const CallToAction = ({ buttonText, linkTo, bgColor, textColor, buttonClass }) => (
   <section className={`${bgColor} ${textColor} py-16`}>
@@ -64,10 +70,10 @@ const Home = () => {
 
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12">
+        <h2 className="text-3xl font-bold text-center mb-12 animate__animated animatele">
           Why Choose Our Portfolio Creator?
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid hover:text-white grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
             imgSrc={home_charts}
             altText="Integrated Graphs"

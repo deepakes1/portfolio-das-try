@@ -92,3 +92,20 @@ select:focus {
 .animate__animated.animate__zoomIn {
   --animate-duration: 1.5s;
 }
+
+/* About.css */
+
+/* Define fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Apply animation to visible sections */
+.fadeIn {
+  animation: fadeIn 1s ease-out forwards;
+}

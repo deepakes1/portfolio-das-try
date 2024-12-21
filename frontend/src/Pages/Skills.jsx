@@ -1,375 +1,3 @@
-// import React, { useState, useEffect, useCallback } from 'react';
-// import axios from 'axios';
-// import { useUser } from "@clerk/clerk-react";
-// import { motion } from 'framer-motion';
-
-// const skillsData = [
-//   { skill: 'HTML5' },
-//   { skill: 'CSS3' },
-//   { skill: 'JavaScript' },
-//   { skill: 'TypeScript' },
-//   { skill: 'React.js' },
-//   { skill: 'Angular' },
-//   { skill: 'Vue.js' },
-//   { skill: 'Node.js' },
-//   { skill: 'Express.js' },
-//   { skill: 'jQuery' },
-//   { skill: 'Bootstrap' },
-//   { skill: 'Tailwind CSS' },
-//   { skill: 'Sass' },
-//   { skill: 'GraphQL' },
-//   { skill: 'Webpack' },
-//   { skill: 'Babel' },
-//   { skill: 'HTML5 APIs' },
-//   { skill: 'Responsive Web Design' },
-//   { skill: 'React Native' },
-//   { skill: 'Next.js' },
-//   { skill: 'Redux' },
-//   { skill: 'Vuex' },
-//   { skill: 'Ember.js' },
-//   { skill: 'Svelte' },
-//   { skill: 'Ionic' },
-//   { skill: 'Ruby on Rails' },
-//   { skill: 'Django' },
-//   { skill: 'Flask' },
-//   { skill: 'Spring Boot' },
-//   { skill: 'Laravel' },
-//   { skill: 'ASP.NET Core' },
-//   { skill: 'Go (Golang)' },
-//   { skill: 'Kotlin' },
-//   { skill: 'FastAPI' },
-//   { skill: 'MySQL' },
-//   { skill: 'PostgreSQL' },
-//   { skill: 'MongoDB' },
-//   { skill: 'SQLite' },
-//   { skill: 'Firebase' },
-//   { skill: 'Redis' },
-//   { skill: 'Oracle DB' },
-//   { skill: 'MS SQL Server' },
-//   { skill: 'Cassandra' },
-//   { skill: 'MariaDB' },
-//   { skill: 'Git' },
-//   { skill: 'GitHub' },
-//   { skill: 'GitLab' },
-//   { skill: 'Bitbucket' },
-//   { skill: 'SVN (Subversion)' },
-//   { skill: 'Docker' },
-//   { skill: 'Kubernetes' },
-//   { skill: 'Jenkins' },
-//   { skill: 'CircleCI' },
-//   { skill: 'Travis CI' },
-//   { skill: 'Ansible' },
-//   { skill: 'Chef' },
-//   { skill: 'Puppet' },
-//   { skill: 'Terraform' },
-//   { skill: 'Bamboo' },
-//   { skill: 'AWS (Amazon Web Services)' },
-//   { skill: 'Microsoft Azure' },
-//   { skill: 'Google Cloud Platform (GCP)' },
-//   { skill: 'IBM Cloud' },
-//   { skill: 'DigitalOcean' },
-//   { skill: 'Firebase Hosting' },
-//   { skill: 'Python' },
-//   { skill: 'R' },
-//   { skill: 'TensorFlow' },
-//   { skill: 'PyTorch' },
-//   { skill: 'Keras' },
-//   { skill: 'Scikit-learn' },
-//   { skill: 'Pandas' },
-//   { skill: 'Numpy' },
-//   { skill: 'Matplotlib' },
-//   { skill: 'Seaborn' },
-//   { skill: 'Java' },
-//   { skill: 'C#' },
-//   { skill: 'C++' },
-//   { skill: 'Swift' },
-//   { skill: 'Objective-C' },
-//   { skill: 'Rust' },
-//   { skill: 'Flutter' },
-//   { skill: 'Xamarin' },
-//   { skill: 'Android Development' },
-//   { skill: 'iOS Development' },
-//   { skill: 'Selenium' },
-//   { skill: 'Jest' },
-//   { skill: 'Mocha' },
-//   { skill: 'Cypress' },
-//   { skill: 'TestNG' },
-//   { skill: 'JUnit' },
-//   { skill: 'Penetration Testing' },
-//   { skill: 'Ethical Hacking' },
-//   { skill: 'OWASP Top 10' },
-//   { skill: 'Cryptography' },
-//   { skill: 'Blockchain' },
-//   { skill: 'Vulnerability Assessment' },
-//   { skill: 'TCP/IP' },
-//   { skill: 'DNS' },
-//   { skill: 'DHCP' },
-//   { skill: 'HTTP/HTTPS' },
-//   { skill: 'VPN' },
-//   { skill: 'Adobe XD' },
-//   { skill: 'Figma' },
-//   { skill: 'Sketch' },
-//   { skill: 'Wireframing' },
-//   { skill: 'Prototyping' },
-//   { skill: 'JIRA' },
-//   { skill: 'Trello' },
-//   { skill: 'Asana' },
-//   { skill: 'Slack' },
-//   { skill: 'Confluence' },
-//   { skill: 'Microsoft Teams' },
-//   { skill: 'Basecamp' },
-//   { skill: 'Agile Methodology' },
-//   { skill: 'Scrum' },
-//   { skill: 'Kanban' },
-//   { skill: 'Power BI' },
-//   { skill: 'Tableau' },
-//   { skill: 'Google Data Studio' },
-//   { skill: 'D3.js' }
-// ];
-
-
-// const Skills = ({ onNext }) => {
-//   const { user, isLoaded } = useUser();
-//   const [skills, setSkills] = useState([]);
-//   const [selectedSkills, setSelectedSkills] = useState([]);
-//   const [addedSkills, setAddedSkills] = useState([]);
-//   const [searchQuery, setSearchQuery] = useState('');
-//   const [currentPage, setCurrentPage] = useState(0);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
-//   const skillsPerPage = 6;
-
-//   // Fetch user's skills
-//   useEffect(() => {
-//     if (!isLoaded || !user) return;
-
-//     const user_id = user.primaryEmailAddress?.emailAddress;
-//     if (user_id) {
-//       const fetchSkills = async () => {
-//         setLoading(true);
-//         try {
-//           const response = await axios.get(`http://localhost:3000/api/skills/${user_id}`);
-//           if (Array.isArray(response.data)) {
-//             setAddedSkills(response.data.map(skill => ({
-//               id: skill.skill_id,
-//               skill_name: skill.skill_name,
-//               proficiency: skill.proficiency,
-//             })));
-//           }
-//         } catch (error) {
-//           setError('Error fetching user skills.');
-//         } finally {
-//           setLoading(false);
-//         }
-//       };
-
-//       setSkills(skillsData.map((skill, index) => ({
-//         id: index + 1,
-//         skill_name: skill.skill,
-//       })));
-
-//       fetchSkills();
-//     }
-//   }, [user, isLoaded]);
-
-//   // Memoize the skill selection handler
-//   const handleSkillSelect = useCallback((skill) => {
-//     setSelectedSkills(prev => prev.includes(skill)
-//       ? prev.filter(s => s !== skill)
-//       : [...prev, skill]);
-//   }, []);
-
-//   // Add selected skills to the added list
-//   const addSelectedSkills = useCallback(() => {
-//     const newSkills = selectedSkills.map(skill => ({
-//       ...skill,
-//       id: `${skill.id}-${Math.random()}`,
-//       proficiency: 50,
-//     }));
-    
-//     setAddedSkills(prev => [...prev, ...newSkills]);
-//     setSelectedSkills([]);
-//   }, [selectedSkills]);
-
-//   // Handle proficiency slider changes
-//   const handleSliderChange = (id, value) => {
-//     setAddedSkills(prev => prev.map(skill =>
-//       skill.id === id ? { ...skill, proficiency: value } : skill));
-//   };
-
-//   // Remove skill from the added skills
-//   const handleRemoveSkill = async (id) => {
-//     try {
-//       const updatedSkills = addedSkills.filter(skill => skill.id !== id);
-//       const reSequencedSkills = updatedSkills.map((skill, index) => ({
-//         ...skill,
-//         id: index + 1,
-//       }));
-      
-//       setAddedSkills(reSequencedSkills);
-
-//       const user_id = user.primaryEmailAddress?.emailAddress;
-//       await axios.delete('http://localhost:3000/api/skills', {
-//         data: { userId: user_id, skillId: id },
-//       });
-//     } catch (error) {
-//       setError('Error removing skill.');
-//     }
-//   };
-
-//   // Save skills to the backend
-//   const handleSaveSkills = async () => {
-//     try {
-//       const user_id = user.primaryEmailAddress?.emailAddress;
-//       const payload = {
-//         userId: user_id,
-//         skills: addedSkills.map(({ skill_name, proficiency }) => ({
-//           skillName: skill_name,
-//           proficiency,
-//         })),
-//       };
-//       await axios.post('http://localhost:3000/api/skills', payload);
-//       onNext(addedSkills);
-//     } catch (error) {
-//       setError('Error saving skills.');
-//     }
-//   };
-
-//   // Filter and paginate skills
-//   const filteredSkills = skills.filter(skill =>
-//     skill.skill_name.toLowerCase().includes(searchQuery.toLowerCase()));
-//   const displayedSkills = filteredSkills.slice(
-//     currentPage * skillsPerPage,
-//     (currentPage + 1) * skillsPerPage
-//   );
-
-//   return (
-//     <motion.div
-//       className="max-w-3xl mx-auto mt-6 p-6 sm:p-8"
-//       initial={{ opacity: 0 }}
-//       animate={{ opacity: 1 }}
-//       transition={{ duration: 0.6 }}
-//     >
-//       <h2 className="text-3xl font-semibold mb-6 text-center text-black">Skills</h2>
-
-//       {loading && <div className="text-center text-blue-500">Loading...</div>}
-//       {error && <div className="text-center text-red-500">{error}</div>}
-
-//       <input
-//         type="text"
-//         value={searchQuery}
-//         onChange={(e) => setSearchQuery(e.target.value)}
-//         placeholder="Search skills..."
-//         className="w-full p-3 border-2 border-gray-300 bg-transparent focus:outline-none mb-6 "
-//       />
-
-//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-//         {displayedSkills.map((skill) => (
-//           <motion.div
-//             key={skill.id}
-//             className="flex items-center justify-between  p-4  shadow-md cursor-pointer"
-//             whileHover={{ scale: 1.05 }}
-//             onClick={() => handleSkillSelect(skill)}
-//           >
-//             <input
-//               type="checkbox"
-//               checked={selectedSkills.includes(skill)}
-//               onChange={() => handleSkillSelect(skill)}
-//               className="mr-3"
-//             />
-//             <span className="flex-1 text-lg text-black">{skill.skill_name}</span>
-//           </motion.div>
-//         ))}
-//       </div>
-
-//       <motion.button
-//         onClick={addSelectedSkills}
-//         className="w-full p-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition"
-//         disabled={selectedSkills.length === 0}
-//         whileHover={{ scale: 1.05 }}
-//         whileTap={{ scale: 0.98 }}
-//       >
-//         Add Selected Skills
-//       </motion.button>
-
-//       {addedSkills.length > 0 && (
-//         <div className="mt-8">
-//           <h3 className="text-2xl font-semibold text-black mb-4">Added Skills</h3>
-//           <div className="space-y-4">
-//             {addedSkills.map((skill) => (
-//               <motion.div
-//                 key={skill.id}
-//                 className="relative flex items-center justify-between p-4 rounded-lg shadow-xl text-black transition duration-200"
-//               >
-//                 <button
-//                   onClick={() => handleRemoveSkill(skill.id)}
-//                   className="absolute -top-3 -right-[5px] text-lg font-bold text-red-800"
-//                   whileHover={{ scale: 1.1 }}
-//                 >
-//                   X
-//                 </button>
-
-//                 <span className="text-lg text-gray-700">{skill.skill_name}</span>
-
-//                 <input
-//                   type="range"
-//                   min="0"
-//                   max="100"
-//                   value={skill.proficiency}
-//                   onChange={(e) => handleSliderChange(skill.id, e.target.value)}
-//                   className="w-32 ml-2"
-//                 />
-//                 <span className="ml-2">{skill.proficiency}%</span>
-//               </motion.div>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-
-//       <div className="flex justify-between mt-8">
-//         <motion.button
-//           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-//           className="p-3 rounded-lg bg-black text-white"
-//           whileHover={{ scale: 1.1 }}
-//         >
-//           Previous
-//         </motion.button>
-//         <motion.button
-//           onClick={() => setCurrentPage((prev) => prev + 1)}
-//           className="p-3 rounded-lg transition bg-black text-white"
-//           whileHover={{ scale: 1.1 }}
-//         >
-//           Next
-//         </motion.button>
-//       </div>
-
-//       <motion.div
-//         className="mt-8"
-//         whileHover={{ scale: 1.05 }}
-//         whileTap={{ scale: 0.98 }}
-//       >
-//         <button
-//           onClick={handleSaveSkills}
-//           className="w-full p-4 bg-indigo-700 text-white rounded-lg disabled:bg-gray-400"
-//           disabled={addedSkills.length === 0}
-//         >
-//           Save Skills and Continue
-//         </button>
-//       </motion.div>
-//     </motion.div>
-//   );
-// };
-
-
-// export default Skills;
-
-
-
-
-
-
-
-'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
@@ -511,139 +139,145 @@ const skillsData = [
 ]
 
 const Skills = ({ onNext }) => {
-  const { user, isLoaded } = useUser()
-  const [skills, setSkills] = useState([])
-  const [selectedSkills, setSelectedSkills] = useState([])
-  const [addedSkills, setAddedSkills] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [currentPage, setCurrentPage] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [submitting, setSubmitting] = useState(false)
-  const skillsPerPage = 12
+  const { user, isLoaded } = useUser();
+  const [skills, setSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [addedSkills, setAddedSkills] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [customSkill, setCustomSkill] = useState('');  // New state for custom skill
+  const skillsPerPage = 12;
 
   useEffect(() => {
-    if (!isLoaded || !user) return
+    if (!isLoaded || !user) return;
 
-    const user_id = user.primaryEmailAddress?.emailAddress
+    const user_id = user.primaryEmailAddress?.emailAddress;
     if (user_id) {
       const fetchSkills = async () => {
-        setLoading(true)
+        setLoading(true);
         try {
-          const response = await axios.get(`http://localhost:3000/api/skills/${user_id}`)
+          const response = await axios.get(`http://localhost:3000/api/skills/${user_id}`);
           if (Array.isArray(response.data)) {
             setAddedSkills(response.data.map(skill => ({
               id: skill.skill_id,
               skill_name: skill.skill_name,
               proficiency: skill.proficiency,
-            })))
+            })));
           }
         } catch (error) {
-          setError('Error fetching user skills.')
+          setError('Error fetching user skills.');
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
-      }
+      };
 
       setSkills(skillsData.map((skill, index) => ({
         id: index + 1,
         skill_name: skill.skill,
-      })))
+      })));
 
-      fetchSkills()
+      fetchSkills();
     }
-  }, [user, isLoaded])
+  }, [user, isLoaded]);
 
   const handleSkillSelect = useCallback((skill) => {
     setSelectedSkills(prev => prev.includes(skill)
       ? prev.filter(s => s !== skill)
-      : [...prev, skill])
-  }, [])
+      : [...prev, skill]);
+  }, []);
 
   const addSelectedSkills = useCallback(() => {
     const newSkills = selectedSkills.map(skill => ({
       ...skill,
       id: `${skill.id}-${Math.random()}`,
       proficiency: 50,
-    }))
-    
-    setAddedSkills(prev => [...prev, ...newSkills])
-    setSelectedSkills([])
-  }, [selectedSkills])
+    }));
+
+    if (customSkill.trim()) {
+      newSkills.push({
+        id: `${Math.random()}`,
+        skill_name: customSkill,
+        proficiency: 50,
+      });
+      setCustomSkill('');  // Clear the custom skill input field after adding
+    }
+
+    setAddedSkills(prev => [...prev, ...newSkills]);
+    setSelectedSkills([]);
+  }, [selectedSkills, customSkill]);
 
   const handleSliderChange = (id, value) => {
     setAddedSkills(prev => prev.map(skill =>
-      skill.id === id ? { ...skill, proficiency: value } : skill))
-  }
+      skill.id === id ? { ...skill, proficiency: value } : skill));
+  };
 
   const handleRemoveSkill = async (id) => {
     try {
-      const updatedSkills = addedSkills.filter(skill => skill.id !== id)
+      const updatedSkills = addedSkills.filter(skill => skill.id !== id);
       const reSequencedSkills = updatedSkills.map((skill, index) => ({
         ...skill,
         id: index + 1,
-      }))
-      
-      setAddedSkills(reSequencedSkills)
+      }));
 
-      const user_id = user.primaryEmailAddress?.emailAddress
+      setAddedSkills(reSequencedSkills);
+
+      const user_id = user.primaryEmailAddress?.emailAddress;
       await axios.delete('http://localhost:3000/api/skills', {
         data: { userId: user_id, skillId: id },
-      })
+      });
     } catch (error) {
-      setError('Error removing skill.')
+      setError('Error removing skill.');
     }
-  }
+  };
 
   const handleSaveSkills = async () => {
-     setSubmitting(true) // Start the loader
+    setSubmitting(true); // Start the loader
     try {
-      const user_id = user.primaryEmailAddress?.emailAddress
+      const user_id = user.primaryEmailAddress?.emailAddress;
       const payload = {
         userId: user_id,
         skills: addedSkills.map(({ skill_name, proficiency }) => ({
           skillName: skill_name,
           proficiency,
         })),
-      }
-      await axios.post('http://localhost:3000/api/skills', payload)
-      onNext(addedSkills)
+      };
+      await axios.post('http://localhost:3000/api/skills', payload);
+      onNext(addedSkills);
     } catch (error) {
-      setError('Error saving skills.')
-    }finally {
-      setSubmitting(false) // Stop the loader
+      setError('Error saving skills.');
+    } finally {
+      setSubmitting(false); // Stop the loader
     }
-  }
+  };
 
   const filteredSkills = skills.filter(skill =>
-    skill.skill_name.toLowerCase().includes(searchQuery.toLowerCase()))
+    skill.skill_name.toLowerCase().includes(searchQuery.toLowerCase()));
   const displayedSkills = filteredSkills.slice(
     currentPage * skillsPerPage,
     (currentPage + 1) * skillsPerPage
-  )
+  );
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-      <GradualSpacing
-        className=" text-3xl font-bold -tracking-widest text-left text-black dark:text-white"
-        text="Skills"
-      />
-        
+        <GradualSpacing
+          className="text-3xl font-bold -tracking-widest text-left text-black dark:text-white"
+          text="Skills"
+        />
         <CardDescription>Add and manage your professional skills</CardDescription>
       </CardHeader>
       <CardContent>
         {loading && <div className="text-center text-blue-500">Loading...</div>}
-        {error && 
+        {error &&
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         }
-
-        
-
 
         <div className="space-y-4">
           <div className="relative">
@@ -698,11 +332,22 @@ const Skills = ({ onNext }) => {
 
           <Button
             onClick={addSelectedSkills}
-            disabled={selectedSkills.length === 0}
+            disabled={selectedSkills.length === 0 && !customSkill.trim()}
             className="w-full"
           >
             <Plus className="mr-2 h-4 w-4" /> Add Selected Skills
           </Button>
+
+          {/* Add custom skill input field */}
+          <div className="mt-4">
+            <Input
+              type="text"
+              value={customSkill}
+              onChange={(e) => setCustomSkill(e.target.value)}
+              placeholder="Add a custom skill"
+              className="w-full"
+            />
+          </div>
         </div>
 
         {addedSkills.length > 0 && (
@@ -727,9 +372,6 @@ const Skills = ({ onNext }) => {
                     max={100}
                     step={1}
                     className="w-1/2  bg-slate-300"
-                    
-                    
-                    
                   />
 
                   <span className="w-12 text-right">{skill.proficiency}%</span>
@@ -766,10 +408,10 @@ const Skills = ({ onNext }) => {
           )}
         </Button>
       </CardFooter>
-
     </Card>
-  )
-}
+  );
+};
+
 
 export default Skills
 

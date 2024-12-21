@@ -739,7 +739,7 @@ import GradualSpacing from "../components/ui/gradual-spacing";
 ];
 
 const Education = ({ onNext }) => {
-  const { user, isLoaded } = useUser()
+   const { user, isLoaded } = useUser();
   const [education, setEducation] = useState([
     {
       education_id: "",
@@ -751,11 +751,14 @@ const Education = ({ onNext }) => {
       grade: "",
       description: "",
     },
-  ])
-  const [errors, setErrors] = useState({})
-  const [activeTab, setActiveTab] = useState('basic')
-  const [loading, setLoading] = useState(false)
-  const [isFetching, setIsFetching] = useState(false)
+  ]);
+  const [errors, setErrors] = useState({});
+  const [activeTab, setActiveTab] = useState("basic");
+  const [loading, setLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [customDegree, setCustomDegree] = useState("");
+  const [customFieldOfStudy, setCustomFieldOfStudy] = useState("");
+
 
   const formatDate = (dateString) => {
     if (!dateString) return ""
@@ -925,27 +928,26 @@ const Education = ({ onNext }) => {
 
   return (
 
-    <div className="container md:mx-auto md:px-4 md:py-8">
-        <div className="flex-grow">
-      {isFetching ? (
-        <div className="flex items-center justify-center">
-          {/* Spinner */}
-          <div className="spinner-border animate-spin h-5 w-5 border-4 border-t-transparent border-blue-500 rounded-full"></div>
-          <span className="ml-2">fetching...</span>
-        </div>
-      ) : (
-        <Card className="w-full md:max-w-4xl md:mx-auto">
+  <div className="container md:min-h-screen md:mx-auto md:px-4 md:py-8">
+  <div className="flex-grow">
+    {isFetching ? (
+      <div className="flex items-center justify-center">
+        {/* Spinner */}
+        <div className="spinner-border animate-spin h-5 w-5 border-4 border-t-transparent border-blue-500 rounded-full"></div>
+        <span className="ml-2">fetching...</span>
+      </div>
+    ) : (
+      <Card className="w-full md:max-w-4xl md:mx-auto">
         <CardHeader>
-        <GradualSpacing
-          className="text-xl md:text-3xl font-bold -tracking-widest text-left text-black dark:text-white"
-          text="Education"
-        />
-          
+          <GradualSpacing
+            className="text-xl md:text-3xl font-bold -tracking-widest text-left text-black dark:text-white"
+            text="Education"
+          />
           <CardDescription>Add your educational qualifications and achievements.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-hidden"> {/* Avoid excess scroll in content */}
           <form onSubmit={handleSubmit}>
-            <div className="md:space-y-6 md:max-h-[60vh] md:overflow-y-auto md:pr-4">
+            <div className="md:space-y-6">
               {education.map((edu, index) => (
                 <Card key={index} className="mb-6">
                   <CardHeader>
@@ -954,18 +956,12 @@ const Education = ({ onNext }) => {
                       Education {index + 1}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="overflow-auto"> {/* Handle internal scrolling here if needed */}
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsList className="hidden md:grid w-full grid-cols-3">
                         <TabsTrigger value="basic">Basic Info</TabsTrigger>
                         <TabsTrigger value="details">Details</TabsTrigger>
                         <TabsTrigger value="description">Description</TabsTrigger>
-                      </TabsList>
-
-                      <TabsList className="md:hidden grid w-full grid-cols-3">
-                        <TabsTrigger value="basic">1</TabsTrigger>
-                        <TabsTrigger value="details">2</TabsTrigger>
-                        <TabsTrigger value="description">3</TabsTrigger>
                       </TabsList>
                       <TabsContent value="basic">
                         <div className="space-y-4">
@@ -978,7 +974,9 @@ const Education = ({ onNext }) => {
                               placeholder="e.g. Harvard University"
                               className="text-sm"
                             />
-                            {errors[`institution_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`institution_${index}`]}</p>}
+                            {errors[`institution_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`institution_${index}`]}</p>
+                            )}
                           </div>
                           <div>
                             <Label htmlFor={`degree_${index}`}>Degree</Label>
@@ -988,11 +986,15 @@ const Education = ({ onNext }) => {
                               </SelectTrigger>
                               <SelectContent className="bg-slate-200 text-sm">
                                 {degreeOptions.map(option => (
-                                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                                  <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                  </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
-                            {errors[`degree_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`degree_${index}`]}</p>}
+                            {errors[`degree_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`degree_${index}`]}</p>
+                            )}
                           </div>
                           <div>
                             <Label htmlFor={`field_of_study_${index}`}>Field of Study</Label>
@@ -1002,11 +1004,15 @@ const Education = ({ onNext }) => {
                               </SelectTrigger>
                               <SelectContent className="bg-slate-200 text-sm">
                                 {fieldOfStudyOptions.map(option => (
-                                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                                  <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                  </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
-                            {errors[`field_of_study_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`field_of_study_${index}`]}</p>}
+                            {errors[`field_of_study_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`field_of_study_${index}`]}</p>
+                            )}
                           </div>
                         </div>
                       </TabsContent>
@@ -1021,7 +1027,9 @@ const Education = ({ onNext }) => {
                               onChange={(e) => handleChange(index, "start_date", e.target.value)}
                               className="text-sm"
                             />
-                            {errors[`start_date_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`start_date_${index}`]}</p>}
+                            {errors[`start_date_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`start_date_${index}`]}</p>
+                            )}
                           </div>
                           <div>
                             <Label htmlFor={`end_date_${index}`}>End Date</Label>
@@ -1032,7 +1040,9 @@ const Education = ({ onNext }) => {
                               onChange={(e) => handleChange(index, "end_date", e.target.value)}
                               className="text-sm"
                             />
-                            {errors[`end_date_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`end_date_${index}`]}</p>}
+                            {errors[`end_date_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`end_date_${index}`]}</p>
+                            )}
                           </div>
                           <div>
                             <Label htmlFor={`grade_${index}`}>Grade</Label>
@@ -1045,7 +1055,9 @@ const Education = ({ onNext }) => {
                               onChange={(e) => handleChange(index, "grade", e.target.value)}
                               className="text-sm"
                             />
-                            {errors[`grade_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`grade_${index}`]}</p>}
+                            {errors[`grade_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`grade_${index}`]}</p>
+                            )}
                           </div>
                         </div>
                       </TabsContent>
@@ -1060,7 +1072,9 @@ const Education = ({ onNext }) => {
                               placeholder="Write about your experience"
                               className="text-sm"
                             />
-                            {errors[`description_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`description_${index}`]}</p>}
+                            {errors[`description_${index}`] && (
+                              <p className="text-red-500 text-sm mt-1">{errors[`description_${index}`]}</p>
+                            )}
                           </div>
                         </div>
                       </TabsContent>
@@ -1078,29 +1092,24 @@ const Education = ({ onNext }) => {
               <Plus className="mr-2" /> Add Education
             </Button>
             <div className="mt-4 w-full">
-  <Button 
-    onClick={handleSubmit} 
-    className="w-full" 
-    disabled={loading}  // Disable button while loading
-  >
-    {loading ? (
-      <div className="flex items-center justify-center">
-        <div className="spinner-border animate-spin h-5 w-5 border-4 border-t-transparent border-blue-500 rounded-full"></div>
-        <span className="ml-2">Submitting...</span>
-      </div>
-    ) : (
-      "Save Projects and Continue"
-    )}
-  </Button>
-</div>
-
+              <Button onClick={handleSubmit} className="w-full" disabled={loading}>
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="spinner-border animate-spin h-5 w-5 border-4 border-t-transparent border-blue-500 rounded-full"></div>
+                    <span className="ml-2">Submitting...</span>
+                  </div>
+                ) : (
+                  "Save and Continue"
+                )}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
-      )}
-    </div>
-      
-    </div>
+    )}
+  </div>
+</div>
+
   )
 }
 

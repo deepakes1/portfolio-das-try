@@ -1,13 +1,10 @@
-
-
-
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion } from "framer-motion";  // Import framer-motion for animation
 import about1 from "../assets/about1.png";
 import design from "../assets/design.png";
 import Aesthetics from "../assets/Aesthetics.png";
 import features from "../assets/features.png";
 import customization from "../assets/customization.png";
-import 'animate.css';
 
 const About = () => {
   // State to track visibility for each section
@@ -58,11 +55,51 @@ const About = () => {
     };
   }, [handleIntersection]);
 
+  // Animation variants for different transitions
+  const fadeInFromLeft = {
+    hidden: { opacity: 0, x: -100 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const fadeInFromRight = {
+    hidden: { opacity: 0, x: 100 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const zoomIn = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+
+  const bounceIn = {
+    hidden: { opacity: 0, y: -50 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
+  };
+
+  // Dynamically choose animation based on section
+  const getAnimationVariant = (id) => {
+    switch (id) {
+      case "section1":
+        return fadeInFromLeft;
+      case "section2":
+        return fadeInFromRight;
+      case "section3":
+        return zoomIn;
+      case "section4":
+        return bounceIn;
+      default:
+        return fadeInFromLeft;
+    }
+  };
+
   const renderSection = (id, image, title, text, bgClass = "") => (
-    <div
+    <motion.div
       id={id}
       ref={(el) => (sectionRefs.current[id] = el)}
-      className={`md:flex p-3 mx-auto ${visibleSections[id] ? "animate__animated animate__zoomIn" : ""} ${bgClass}`}
+      className={`md:flex p-3 mx-auto ${bgClass}`}
+      initial="hidden"
+      animate={visibleSections[id] ? "visible" : "hidden"}
+      variants={getAnimationVariant(id)} // Dynamically apply the variant
     >
       <div className="md:w-1/2 md:flex justify-center">
         <img
@@ -75,14 +112,14 @@ const About = () => {
         <h3 className="text-xl font-semibold text-white md:mb-3">{title}</h3>
         <p className="text-white mt-2 lg:mt-0 lg:w-full lg:max-w-2xl lg:px-5">{text}</p>
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
     <div className="min-h-screen bg-gradient-to-br">
       <div className="mx-auto bg-white shadow-xl overflow-hidden">
         <div className="md:flex bg-gray-900 min-h-screen">
-          <div className="animate__animated animate__zoomIn md:w-1/2 flex justify-center items-center">
+          <div className="md:w-1/2 flex justify-center items-center">
             <img
               src={about1}
               className="w-full object-cover rounded-lg shadow-lg"
@@ -127,17 +164,8 @@ const About = () => {
               customization,
               "Easy Customization",
               "Easily edit your portfolio with our intuitive interface, allowing seamless navigation between sections and real-time changes. Effortlessly make edits with a simple and smooth workflow.",
-              " bg-gray-900"
+              "mt-4 bg-gray-900"
             )}
-          </div>
-
-          <div className="text-center mt-10">
-            <a
-              href="/features"
-              className="inline-block px-10 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg shadow-xl hover:bg-indigo-800 transition duration-300"
-            >
-              Explore Features
-            </a>
           </div>
         </div>
       </div>
@@ -146,7 +174,3 @@ const About = () => {
 };
 
 export default About;
-
-
-
-
