@@ -181,6 +181,8 @@ const handleSubmit = async (e) => {
       headers: { "Content-Type": "multipart/form-data" },
     });
     
+    console.log(dataToSend);
+    
     onNext();
   } catch (error) {
     console.error("Error submitting form:", error);
