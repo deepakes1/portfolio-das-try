@@ -40,7 +40,7 @@ const Projects = ({ onNext }) => {
       const fetchProjects = async () => {
         setIsFetching(true)  // Set fetching state to true before the fetch starts
         try {
-          const response = await axios.get("http://localhost:3000/api/projects", {
+          const response = await axios.get("https://portfolio-das-try-backend.vercel.app/api/projects", {
             params: { user_id: user.primaryEmailAddress?.emailAddress },
           })
 
@@ -101,7 +101,7 @@ const Projects = ({ onNext }) => {
     const projectToRemove = projects[index]
     if (projectToRemove.id) {
       try {
-        const response = await axios.delete("http://localhost:3000/api/projects", {
+        const response = await axios.delete("https://portfolio-das-try-backend.vercel.app/api/projects", {
           data: { project_id: projectToRemove.id },
         })
 
@@ -176,7 +176,7 @@ const Projects = ({ onNext }) => {
         })),
       }
 
-      const response = await axios.post("http://localhost:3000/api/projects", payload)
+      const response = await axios.post("https://portfolio-das-try-backend.vercel.app/api/projects", payload)
 
       if (response.status === 200) {
         console.log("Projects saved successfully!")

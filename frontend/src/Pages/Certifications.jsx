@@ -354,7 +354,7 @@ const Certifications = ({ onNext }) => {
         }
 
         try {
-          const response = await axios.get(`http://localhost:3000/api/certifications/${userId}`)
+          const response = await axios.get(`https://portfolio-das-try-backend.vercel.app/api/certifications/${userId}`)
           if (response.data && response.data.length > 0) {
             const formattedCertifications = response.data.map((cert) => ({
               ...cert,
@@ -405,7 +405,7 @@ const Certifications = ({ onNext }) => {
     const certToRemove = certifications[index]
     if (certToRemove.certification_id) {
       try {
-        const response = await axios.delete(`http://localhost:3000/api/certifications/${certToRemove.certification_id}`)
+        const response = await axios.delete(`https://portfolio-das-try-backend.vercel.app/api/certifications/${certToRemove.certification_id}`)
         if (response.status === 200) {
           setCertifications((prevCertifications) => prevCertifications.filter((_, i) => i !== index))
         } else {
@@ -470,7 +470,7 @@ const Certifications = ({ onNext }) => {
         })),
       }
 
-      const response = await axios.post('http://localhost:3000/submit-certifications', certificationsData)
+      const response = await axios.post('https://portfolio-das-try-backend.vercel.app/submit-certifications', certificationsData)
 
       if (response.status === 200) {
         console.log("Certifications saved successfully!")

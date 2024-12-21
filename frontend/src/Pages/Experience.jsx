@@ -356,7 +356,7 @@ const Experience = ({ onNext }) => {
 
       try {
         setIsFetching(true)  // Set fetching state to true before the fetch starts
-        const response = await axios.get("http://localhost:3000/api/work-experience", {
+        const response = await axios.get("https://portfolio-das-try-backend.vercel.app/api/work-experience", {
           params: { user_id: userId },
         })
 
@@ -423,7 +423,7 @@ const Experience = ({ onNext }) => {
     }
 
     try {
-      const response = await axios.delete("http://localhost:3000/api/work-experience", {
+      const response = await axios.delete("https://portfolio-das-try-backend.vercel.app/api/work-experience", {
         data: { experience_id: experienceToRemove.experience_id },
       })
 
@@ -477,7 +477,7 @@ const Experience = ({ onNext }) => {
 
     try {
       for (const exp of experiences) {
-        await axios.post("http://localhost:3000/api/work-experience", {
+        await axios.post("https://portfolio-das-try-backend.vercel.app/api/work-experience", {
           userId,
           experienceId: exp.experience_id,
           job_title: exp.job_title,

@@ -159,7 +159,7 @@ const Skills = ({ onNext }) => {
       const fetchSkills = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`http://localhost:3000/api/skills/${user_id}`);
+          const response = await axios.get(`https://portfolio-das-try-backend.vercel.app/api/skills/${user_id}`);
           if (Array.isArray(response.data)) {
             setAddedSkills(response.data.map(skill => ({
               id: skill.skill_id,
@@ -225,7 +225,7 @@ const Skills = ({ onNext }) => {
       setAddedSkills(reSequencedSkills);
 
       const user_id = user.primaryEmailAddress?.emailAddress;
-      await axios.delete('http://localhost:3000/api/skills', {
+      await axios.delete('https://portfolio-das-try-backend.vercel.app/api/skills', {
         data: { userId: user_id, skillId: id },
       });
     } catch (error) {
@@ -244,7 +244,7 @@ const Skills = ({ onNext }) => {
           proficiency,
         })),
       };
-      await axios.post('http://localhost:3000/api/skills', payload);
+      await axios.post('https://portfolio-das-try-backend.vercel.app/api/skills', payload);
       onNext(addedSkills);
     } catch (error) {
       setError('Error saving skills.');

@@ -78,7 +78,7 @@ const PersonalInfo = ({ onNext }) => {
         const fetchPersonalInfo = async () => {
           setIsFetching(true)  // Set fetching state to true before the fetch starts
           try {
-            const response = await axios.get(`http://localhost:3000/api/personal-info?user_id=${user_id}`)
+            const response = await axios.get(`https://portfolio-das-try-backend.vercel.app/api/personal-info?user_id=${user_id}`)
             if (response.data) {
               setFormData((prevData) => ({
                 ...prevData,
@@ -177,7 +177,7 @@ const handleSubmit = async (e) => {
   dataToSend.append("emailAddress", formData.emailAddress);
 
   try {
-    await axios.post("http://localhost:3000/api/personal-info", dataToSend, {
+    await axios.post("https://portfolio-das-try-backend.vercel.app/api/personal-info", dataToSend, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     

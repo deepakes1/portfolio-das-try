@@ -836,11 +836,11 @@ const Education = ({ onNext }) => {
           return
         }
 
-        await axios.delete(`http://localhost:3000/api/education/${userId}/${educationToRemove.education_id}`)
+        await axios.delete(`https://portfolio-das-try-backend.vercel.app/api/education/${userId}/${educationToRemove.education_id}`)
 
         setEducation((prevEducation) => prevEducation.filter((_, i) => i !== index))
 
-        const response = await axios.get(`http://localhost:3000/api/education/${userId}`)
+        const response = await axios.get(`https://portfolio-das-try-backend.vercel.app/api/education/${userId}`)
         if (response.data.education && response.data.education.length > 0) {
           const formattedEducation = response.data.education.map((edu) => ({
             ...edu,
@@ -912,7 +912,7 @@ const Education = ({ onNext }) => {
         })),
       }
 
-      await axios.post('http://localhost:3000/submit-education', educationData)
+      await axios.post('https://portfolio-das-try-backend.vercel.app/submit-education', educationData)
       console.log("Education data saved successfully.")
       if (onNext) onNext()
     } catch (error) {

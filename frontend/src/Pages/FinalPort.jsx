@@ -899,7 +899,7 @@ export default function ProfessionalPortfolio() {
       throw new Error('User ID is missing.');
     }
 
-    const response = await fetch(`http://localhost:3000/api/final-work-experience?user_id=${user_id}`);
+    const response = await fetch(`https://portfolio-das-try-backend.vercel.app/api/final-work-experience?user_id=${user_id}`);
     
     if (!response.ok) {
       throw new Error('Failed to fetch work experience');
@@ -1054,7 +1054,7 @@ const radarChartOptions = {
       }
 
       // Fetch personal info
-      const response = await fetch(`http://localhost:3000/api/personal-info?user_id=${user_id}`);
+      const response = await fetch(`https://portfolio-das-try-backend.vercel.app/api/personal-info?user_id=${user_id}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch personal info');
@@ -1080,7 +1080,7 @@ const radarChartOptions = {
       }
 
       // Fetch user skills data
-      const response = await fetch(`http://localhost:3000/api/skills/${user_id}`);
+      const response = await fetch(`https://portfolio-das-try-backend.vercel.app/api/skills/${user_id}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch skills');
@@ -1149,7 +1149,7 @@ const skillsChartData = {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/education/${userId}`);
+    const response = await fetch(`https://portfolio-das-try-backend.vercel.app/api/education/${userId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -1173,7 +1173,7 @@ const fetchProjects = async () => {
       throw new Error('User ID is missing.');
     }
 
-    const response = await axios.get("http://localhost:3000/api/projects", {
+    const response = await axios.get("https://portfolio-das-try-backend.vercel.app/api/projects", {
       params: { user_id: user_id },
     });
 
@@ -1230,7 +1230,7 @@ const fetchCertifications = async () => {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/certifications/${user_id}`);
+    const response = await fetch(`https://portfolio-das-try-backend.vercel.app/api/certifications/${user_id}`);
     if (!response.ok) {
       throw new Error('Failed to fetch certifications');
     }
