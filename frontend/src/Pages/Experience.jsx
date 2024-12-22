@@ -380,7 +380,7 @@ const Experience = ({ onNext }) => {
       } catch (error) {
         console.error("Error fetching experience data:", error)
       } finally {
-        setIsFetching(false)  // Set fetching state to false after the fetch is complete
+        setIsFetching(false)  
       }
     }
 
@@ -514,45 +514,39 @@ const Loader = () => (
 );
 
   return (
-    <div className="container md:min-h-screen md:mx-auto md:px-4 md:py-8">
-    {isFetching ? (
+     <div className="md:container md:mx-auto md:px-4 md:py-8">
+      {loading ? (
         <div className="flex items-center justify-center">
-          {/* Spinner */}
-          <div className="spinner-border animate-spin h-5 w-5 border-4 border-t-transparent border-blue-500 rounded-full"></div>
+          <div className="animate-spin h-5 w-5 border-4 border-t-transparent border-blue-500 rounded-full"></div>
           <span className="ml-2">fetching...</span>
         </div>
       ) : (
         <Card className="w-full md:max-w-4xl md:mx-auto">
           <CardHeader>
-          <GradualSpacing
-            className="text-lg md:text-3xl font-bold -tracking-widest text-left text-black dark:text-white"
-            text="Work Experience"
-          />
-            
-            <CardDescription>Add your professional experiences to showcase your career journey.</CardDescription>
+            <CardTitle className="text-lg md:text-3xl font-bold tracking-tight text-left text-primary">
+              Work Experience
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Add your professional experiences to showcase your career journey.
+            </p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
-              <div className="md:space-y-6 max-h-[65vh] md:overflow-y-auto p-0 md:pr-4">
+              <div className="space-y-6 max-h-[65vh] overflow-y-auto p-0 md:pr-4">
                 {experiences.map((experience, index) => (
                   <Card key={index} className="mb-6">
                     <CardHeader>
                       <CardTitle className="text-xl font-semibold flex items-center">
-                        <Briefcase className="mr-2" />
+                        <Plus className="mr-2" size={20} />
                         Experience {index + 1}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="hidden md:grid w-full grid-cols-3">
-                          <TabsTrigger value="basic">Basic</TabsTrigger>
-                          <TabsTrigger value="details">Detail</TabsTrigger>
-                          <TabsTrigger value="achievements">Achievement</TabsTrigger>
-                        </TabsList>
-                        <TabsList className="md:hidden grid w-full grid-cols-3">
-                          <TabsTrigger value="basic">1</TabsTrigger>
-                          <TabsTrigger value="details">2</TabsTrigger>
-                          <TabsTrigger value="achievements">3</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-3 mb-4">
+                          <TabsTrigger value="basic" className="text-xs sm:text-sm">Basic</TabsTrigger>
+                          <TabsTrigger value="details" className="text-xs sm:text-sm">Detail</TabsTrigger>
+                          <TabsTrigger value="achievements" className="text-xs sm:text-sm">Achievement</TabsTrigger>
                         </TabsList>
                         <TabsContent value="basic">
                           <div className="space-y-4">
@@ -563,9 +557,11 @@ const Loader = () => (
                                 value={experience.job_title}
                                 onChange={(e) => handleChange(index, "job_title", e.target.value)}
                                 placeholder="e.g. Software Engineer"
-                                className  = "text-sm"
+                                className="text-sm"
                               />
-                              {errors[`job_title_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`job_title_${index}`]}</p>}
+                              {errors[`job_title_${index}`] && (
+                                <p className="text-red-500 text-sm mt-1">{errors[`job_title_${index}`]}</p>
+                              )}
                             </div>
                             <div>
                               <Label htmlFor={`company_${index}`}>Company</Label>
@@ -574,11 +570,13 @@ const Loader = () => (
                                 value={experience.company}
                                 onChange={(e) => handleChange(index, "company", e.target.value)}
                                 placeholder="e.g. Tech Solutions Inc."
-                                className  = "text-sm"
+                                className="text-sm"
                               />
-                              {errors[`company_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`company_${index}`]}</p>}
+                              {errors[`company_${index}`] && (
+                                <p className="text-red-500 text-sm mt-1">{errors[`company_${index}`]}</p>
+                              )}
                             </div>
-                            <div className="flex flex-col md:flex-row gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div>
                                 <Label htmlFor={`startDate_${index}`}>Start Date</Label>
                                 <Input
@@ -586,9 +584,11 @@ const Loader = () => (
                                   type="date"
                                   value={experience.startDate}
                                   onChange={(e) => handleChange(index, "startDate", e.target.value)}
-                                  className  = "text-sm"
+                                  className="text-sm"
                                 />
-                                {errors[`startDate_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`startDate_${index}`]}</p>}
+                                {errors[`startDate_${index}`] && (
+                                  <p className="text-red-500 text-sm mt-1">{errors[`startDate_${index}`]}</p>
+                                )}
                               </div>
                               <div>
                                 <Label htmlFor={`endDate_${index}`}>End Date</Label>
@@ -597,19 +597,24 @@ const Loader = () => (
                                   type="date"
                                   value={experience.endDate}
                                   onChange={(e) => handleChange(index, "endDate", e.target.value)}
-                                  className  = "text-sm"
+                                  className="text-sm"
                                 />
                               </div>
                             </div>
                             <div>
                               <Label htmlFor={`employmentType_${index}`}>Employment Type</Label>
-                              <Select onValueChange={(value) => handleChange(index, "employmentType", value)} value={experience.employmentType}>
+                              <Select
+                                onValueChange={(value) => handleChange(index, "employmentType", value)}
+                                value={experience.employmentType}
+                              >
                                 <SelectTrigger>
                                   <SelectValue placeholder="Select employment type" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-slate-100">
+                                <SelectContent>
                                   {employmentTypes.map((type) => (
-                                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                                    <SelectItem key={type} value={type}>
+                                      {type}
+                                    </SelectItem>
                                   ))}
                                 </SelectContent>
                               </Select>
@@ -621,11 +626,13 @@ const Loader = () => (
                                     value={experience.customEmploymentType}
                                     onChange={(e) => handleChange(index, "customEmploymentType", e.target.value)}
                                     placeholder="Enter custom employment type"
-                                    className  = "text-sm"
+                                    className="text-sm"
                                   />
                                 </div>
                               )}
-                              {errors[`employmentType_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`employmentType_${index}`]}</p>}
+                              {errors[`employmentType_${index}`] && (
+                                <p className="text-red-500 text-sm mt-1">{errors[`employmentType_${index}`]}</p>
+                              )}
                             </div>
                           </div>
                         </TabsContent>
@@ -639,9 +646,8 @@ const Loader = () => (
                                 onChange={(e) => handleChange(index, "description", e.target.value)}
                                 placeholder="Describe your role and responsibilities"
                                 rows={4}
-                                className  = "text-sm"
+                                className="text-sm"
                               />
-                              {errors[`description_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`description_${index}`]}</p>}
                             </div>
                             <div>
                               <Label htmlFor={`technologies_${index}`}>Technologies Used</Label>
@@ -651,9 +657,8 @@ const Loader = () => (
                                 onChange={(e) => handleChange(index, "technologies", e.target.value)}
                                 placeholder="List the technologies and tools you used"
                                 rows={3}
-                                className  = "text-sm"
+                                className="text-sm"
                               />
-                              {errors[`technologies_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`technologies_${index}`]}</p>}
                             </div>
                           </div>
                         </TabsContent>
@@ -666,9 +671,8 @@ const Loader = () => (
                               onChange={(e) => handleChange(index, "achievements", e.target.value)}
                               placeholder="List your notable achievements"
                               rows={4}
-                              className  = "text-sm"
+                              className="text-sm"
                             />
-                            {errors[`achievements_${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`achievements_${index}`]}</p>}
                           </div>
                         </TabsContent>
                       </Tabs>
@@ -686,37 +690,27 @@ const Loader = () => (
                   </Card>
                 ))}
               </div>
-              <div className="md:flex justify-between items-center mt-6 ">
-    {/* Add Experience Button */}
-    <div>
-      <Button type="button" onClick={handleAddExperience} className="flex items-center">
-        <Plus className="mr-2" size={16} /> Add Experience
-      </Button>
-    </div>
-    
-    {/* Save and Continue Button or Loading Spinner */}
-    <div className="flex-grow text-right">
-    {loading ? (
-      <div className="flex items-center justify-center">
-        {/* Spinner */}
-        <div className="animate-spin border-t-4 border-blue-500 border-solid rounded-full h-5 w-5 mr-2"></div>
-        <span>loading...</span>
-      </div>
-    ) : (
-      <div className="mt-5 md:mt-0 flex justify-center md:justify-end">
-        <Button type="submit" variant="primary" disabled={loading}>
-        Save and Continue
-      </Button>
-      </div>
-    )}
-  </div>
-
-  </div>
-
+              <div className="mt-6 space-y-4 sm:space-y-0 sm:flex sm:justify-between sm:items-center">
+                <Button type="button" onClick={handleAddExperience} className="w-full sm:w-auto flex items-center justify-center">
+                  <Plus className="mr-2" size={16} /> Add Experience
+                </Button>
+                <div className="w-full sm:w-auto">
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin border-t-4 border-blue-500 border-solid rounded-full h-5 w-5 mr-2"></div>
+                      <span>loading...</span>
+                    </div>
+                  ) : (
+                    <Button type="submit" variant="default" disabled={loading} className="w-full sm:w-auto">
+                      Save and Continue
+                    </Button>
+                  )}
+                </div>
+              </div>
             </form>
           </CardContent>
         </Card>
-        )}
+      )}
     </div>
   )
 }

@@ -13,7 +13,7 @@ const multer = require("multer");
 const path = require("path");
 app.use(express.urlencoded({ extended: true }));
 
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 const pool = new Pool({
@@ -32,11 +32,15 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static("uploads"));
+
+app.get("/", async (req, res) => {
+  res.send("Hello World");
+});
 
 app.post("/api/personal-info", upload.single("profilePicture"), async (req, res) => {
   const { user_id, firstName, lastName, mobileNumber, location, professionalTitle, customTitle, summary, socialLinks, emailAddress } = req.body;
-  
+
   console.log("Request body:", req.body); // Log the received request body for debugging
 
   // Check if required fields are provided
@@ -44,7 +48,7 @@ app.post("/api/personal-info", upload.single("profilePicture"), async (req, res)
     return res.status(400).json({ message: "All required fields must be provided" });
   }
 
-  // Parse the socialLinks JSON string into an object (this step is important)
+  // Parse the socialLinks JSON string into an object
   let socialLinksParsed = {};
   try {
     socialLinksParsed = JSON.parse(socialLinks);
@@ -55,64 +59,88 @@ app.post("/api/personal-info", upload.single("profilePicture"), async (req, res)
   const { linkedIn, github } = socialLinksParsed;
 
   // Get the profile picture file path (if it exists)
-  let profilePicture = req.file ? req.file.filename : null;  // If a new file is uploaded, use the filename; otherwise, it's null
+  let profilePicture = req.file ? req.file.filename : null;
 
-  // SQL query to update user data
-  const updateQuery = `
-    UPDATE Users
-    SET 
-      first_name = $1,
-      last_name = $2,
-      mobile_number = $3,
-      location = $4,
-      profile_picture = $5,
-      professional_title = $6,
-      custom_title = $7,
-      summary = $8,
-      linkedin = $9,
-      github = $10,
-      email = $11,
-      updated_at = CURRENT_TIMESTAMP
-    WHERE user_id = $12
-    RETURNING *;
-  `;
+  // First, check if the user_id exists in the database
+  const checkUserExistsQuery = 'SELECT * FROM Users WHERE user_id = $1';
+  const checkResult = await client.query(checkUserExistsQuery, [user_id]);
 
-  try {
-    // Run the query to update the user data in the database
-    const result = await pool.query(updateQuery, [
-      firstName, 
-      lastName, 
-      mobileNumber, 
-      location, 
-      profilePicture, 
-      professionalTitle, 
-      customTitle, 
-      summary, 
-      linkedIn, 
-      github, 
-      emailAddress, 
-      user_id
-    ]);
+  if (checkResult.rows.length > 0) {
+    // If the user exists, update the data
+    const updateQuery = `
+      UPDATE Users
+      SET 
+        first_name = $1,
+        last_name = $2,
+        mobile_number = $3,
+        location = $4,
+        profile_picture = $5,
+        professional_title = $6,
+        custom_title = $7,
+        summary = $8,
+        linkedin = $9,
+        github = $10,
+        email = $11,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE user_id = $12
+      RETURNING *;
+    `;
 
-    // If no user was found with the given user_id, return 404
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "User not found" });
+    try {
+      const updateResult = await client.query(updateQuery, [
+        firstName, 
+        lastName, 
+        mobileNumber, 
+        location, 
+        profilePicture, 
+        professionalTitle, 
+        customTitle, 
+        summary, 
+        linkedIn, 
+        github, 
+        emailAddress, 
+        user_id
+      ]);
+
+      res.json({ message: "User data updated successfully", user: updateResult.rows[0] });
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
+  } else {
+    // If the user does not exist, insert a new record
+    const insertQuery = `
+      INSERT INTO Users (
+        user_id, first_name, last_name, mobile_number, location, profile_picture, 
+        professional_title, custom_title, summary, linkedin, github, email, created_at, updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      RETURNING *;
+    `;
 
-    // Respond with success and updated user data
-    res.json({ message: "User data updated successfully", user: result.rows[0] });
-  } catch (error) {
-    console.error("Error updating user data:", error);
-    res.status(500).json({ message: "Internal server error" });
+    try {
+      const insertResult = await client.query(insertQuery, [
+        user_id, 
+        firstName, 
+        lastName, 
+        mobileNumber, 
+        location, 
+        profilePicture, 
+        professionalTitle, 
+        customTitle, 
+        summary, 
+        linkedIn, 
+        github, 
+        emailAddress
+      ]);
+
+      res.json({ message: "User created successfully", user: insertResult.rows[0] });
+    } catch (error) {
+      console.error("Error inserting user data:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
 });
-
-
-
-app.get("/", async (req, res) => {
-  res.send("Hello World");
-});
-
 
 // API endpoint to get user data
 app.get("/api/personal-info", async (req, res) => {
@@ -127,7 +155,11 @@ app.get("/api/personal-info", async (req, res) => {
     const { rows } = await pool.query(query, [user_id]);
 
     if (rows.length === 0) {
-      return res.status(404).json({ error: "No data found for this user." });
+      // Instead of a 404, send a success response with a message
+      return res.status(200).json({
+        message: "User not found",
+        user: null, // Send null or a default object if needed
+      });
     }
 
     res.status(200).json(rows[0]);
@@ -137,6 +169,29 @@ app.get("/api/personal-info", async (req, res) => {
   }
 });
 
+app.get('/api/user-exists', async (req, res) => {
+  const { user_id } = req.query;
+
+  if (!user_id) {
+    return res.status(400).json({ message: 'user_id is required' });
+  }
+
+  try {
+    // Query the database to check if the user_id exists
+    const result = await pool.query('SELECT 1 FROM users WHERE user_id = $1 LIMIT 1', [user_id]);
+
+    if (result.rows.length > 0) {
+      // User exists
+      return res.json({ exists: true });
+    } else {
+      // User does not exist
+      return res.json({ exists: false });
+    }
+  } catch (error) {
+    console.error('Error checking user existence:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 app.post('/api/work-experience', async (req, res) => {
