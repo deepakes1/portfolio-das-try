@@ -160,17 +160,17 @@ const PersonalInfo = ({ onNext }) => {
     dataToSend.append("socialLinks", JSON.stringify(formData.socialLinks))
     dataToSend.append("emailAddress", formData.emailAddress)
 
-  try {
-    await axios.post("https://portfolio-das-try-backend.vercel.app/api/personal-info", dataToSend, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    
-    onNext();
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    alert(`Error: ${error.response?.data?.message || "Something went wrong."}`);
-  } finally {
-    setIsSubmitting(false);
+    try {
+      await axios.post("https://portfolio-das-try-backend.vercel.app/api/personal-info", dataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      onNext()
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      alert(`Error: ${error.response?.data?.message || "Something went wrong."}`)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -456,7 +456,6 @@ const PersonalInfo = ({ onNext }) => {
       )}
     </div>
   )
-  }
 }
 
-export default PersonalInfo;
+export default PersonalInfo

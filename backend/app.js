@@ -40,7 +40,7 @@ app.get("/", async (req, res) => {
 
 app.post("/api/personal-info", upload.single("profilePicture"), async (req, res) => {
   const { user_id, firstName, lastName, mobileNumber, location, professionalTitle, customTitle, summary, socialLinks, emailAddress } = req.body;
-
+  
   console.log("Request body:", req.body); // Log the received request body for debugging
 
   // Check if required fields are provided
@@ -48,7 +48,7 @@ app.post("/api/personal-info", upload.single("profilePicture"), async (req, res)
     return res.status(400).json({ message: "All required fields must be provided" });
   }
 
-  // Parse the socialLinks JSON string into an object
+  // Parse the socialLinks JSON string into an object (this step is important)
   let socialLinksParsed = {};
   try {
     socialLinksParsed = JSON.parse(socialLinks);
@@ -59,86 +59,55 @@ app.post("/api/personal-info", upload.single("profilePicture"), async (req, res)
   const { linkedIn, github } = socialLinksParsed;
 
   // Get the profile picture file path (if it exists)
-  let profilePicture = req.file ? req.file.filename : null;
+  let profilePicture = req.file ? req.file.filename : null;  // If a new file is uploaded, use the filename; otherwise, it's null
 
-  // First, check if the user_id exists in the database
-  const checkUserExistsQuery = 'SELECT * FROM Users WHERE user_id = $1';
-  const checkResult = await client.query(checkUserExistsQuery, [user_id]);
+  // SQL query to update user data
+  const updateQuery = `
+    UPDATE Users
+    SET 
+      first_name = $1,
+      last_name = $2,
+      mobile_number = $3,
+      location = $4,
+      profile_picture = $5,
+      professional_title = $6,
+      custom_title = $7,
+      summary = $8,
+      linkedin = $9,
+      github = $10,
+      email = $11,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE user_id = $12
+    RETURNING *;
+  `;
 
-  if (checkResult.rows.length > 0) {
-    // If the user exists, update the data
-    const updateQuery = `
-      UPDATE Users
-      SET 
-        first_name = $1,
-        last_name = $2,
-        mobile_number = $3,
-        location = $4,
-        profile_picture = $5,
-        professional_title = $6,
-        custom_title = $7,
-        summary = $8,
-        linkedin = $9,
-        github = $10,
-        email = $11,
-        updated_at = CURRENT_TIMESTAMP
-      WHERE user_id = $12
-      RETURNING *;
-    `;
+  try {
+    // Run the query to update the user data in the database
+    const result = await pool.query(updateQuery, [
+      firstName, 
+      lastName, 
+      mobileNumber, 
+      location, 
+      profilePicture, 
+      professionalTitle, 
+      customTitle, 
+      summary, 
+      linkedIn, 
+      github, 
+      emailAddress, 
+      user_id
+    ]);
 
-    try {
-      const updateResult = await client.query(updateQuery, [
-        firstName, 
-        lastName, 
-        mobileNumber, 
-        location, 
-        profilePicture, 
-        professionalTitle, 
-        customTitle, 
-        summary, 
-        linkedIn, 
-        github, 
-        emailAddress, 
-        user_id
-      ]);
-
-      res.json({ message: "User data updated successfully", user: updateResult.rows[0] });
-    } catch (error) {
-      console.error("Error updating user data:", error);
-      res.status(500).json({ message: "Internal server error" });
+    // If no user was found with the given user_id, return 404
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
     }
-  } else {
-    // If the user does not exist, insert a new record
-    const insertQuery = `
-      INSERT INTO Users (
-        user_id, first_name, last_name, mobile_number, location, profile_picture, 
-        professional_title, custom_title, summary, linkedin, github, email, created_at, updated_at
-      )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      RETURNING *;
-    `;
 
-    try {
-      const insertResult = await client.query(insertQuery, [
-        user_id, 
-        firstName, 
-        lastName, 
-        mobileNumber, 
-        location, 
-        profilePicture, 
-        professionalTitle, 
-        customTitle, 
-        summary, 
-        linkedIn, 
-        github, 
-        emailAddress
-      ]);
-
-      res.json({ message: "User created successfully", user: insertResult.rows[0] });
-    } catch (error) {
-      console.error("Error inserting user data:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
+    // Respond with success and updated user data
+    res.json({ message: "User data updated successfully", user: result.rows[0] });
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -168,6 +137,7 @@ app.get("/api/personal-info", async (req, res) => {
     res.status(500).json({ error: "Database error. Please try again later." });
   }
 });
+
 
 app.get('/api/user-exists', async (req, res) => {
   const { user_id } = req.query;
