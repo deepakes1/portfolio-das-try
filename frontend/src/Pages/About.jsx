@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";  // Import framer-motion for animation
-import about1 from "../assets/about1.png";
+import { motion } from "framer-motion";  
 import design from "../assets/design.png";
 import Aesthetics from "../assets/Aesthetics.png";
 import features from "../assets/features.png";

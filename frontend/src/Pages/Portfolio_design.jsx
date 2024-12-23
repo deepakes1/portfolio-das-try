@@ -44,10 +44,11 @@ function PortfolioDesign() {
   const fetchPersonalInfo = async (email) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/personal-info?email=${email}`
+        `https://portfolio-das-try-backend.vercel.app/api/personal-info?email=${email}`
       );
+      console.log(response.data);
       setPersonalInfoData(response.data || {});
-      setMaxAccessibleStep(1); // Unlock access to the Personal Info step
+      setMaxAccessibleStep(1); 
     } catch (error) {
       console.error("Error fetching personal info:", error);
     }
@@ -108,23 +109,23 @@ function PortfolioDesign() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br bg-[#F8F8F8] p-4 md:p-5" >
+    <div className="min-h-screen bg-gradient-to-br bg-[#F8F8F8] p-4 md:p-5">
   {/* Signed Out UI */}
   <SignedOut>
-    <div className="flex flex-col justify-center items-center min-h-screen">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">
-        Welcome to Portfolio Builder
-      </h1>
-      <p className="text-lg text-gray-600 mb-8 text-center max-w-xl">
-        Create a stunning portfolio in just a few steps! Sign in to get
-        started and showcase your experience, skills, and projects like
-        never before.
-      </p>
-      <SignInButton mode="modal" redirectUrl="/Design_Portfolio">
-        <button className="bg-blue-500 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 shadow-lg transition-all">
-          Sign In to Start Building 🚀
-        </button>
-      </SignInButton>
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 text-white">
+      <div className="text-center max-w-lg px-6 py-8 rounded-xl shadow-lg hover:shadow-blue-500 md:shadow-white bg-opacity-80 backdrop-blur-sm">
+        <h1 className="text-5xl font-semibold mb-6 tracking-tight">
+          Welcome to Portfolio Builder
+        </h1>
+        <p className="text-lg mb-8 leading-relaxed">
+          Create a stunning portfolio in just a few steps. Sign in now to get started and showcase your experience, skills, and projects like never before. Let’s build something amazing together!
+        </p>
+        <SignInButton mode="modal" redirectUrl="/Design_Portfolio">
+          <button className="bg-blue-600 hover:bg-white hover:text-black text-white px-8 py-3 rounded-full text-lg font-medium focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all shadow-lg transform duration-200 ease-in-out">
+            Sign In to Start Building 🚀
+          </button>
+        </SignInButton>
+      </div>
     </div>
   </SignedOut>
 
@@ -149,7 +150,7 @@ function PortfolioDesign() {
             onClick={() => handleStepClick(index)}
             className={`w-14 h-14 md:w-16 md:h-16 mx-auto flex items-center justify-center rounded-full text-white font-bold shadow-md cursor-pointer transition-all duration-300 ${
               index === currentStep
-                ? "bg-black  scale-105 animate-glow" 
+                ? "bg-black scale-105 animate-glow" 
                 : index <= maxAccessibleStep
                 ? "bg-black"
                 : "bg-gray-600 cursor-not-allowed"
@@ -159,7 +160,7 @@ function PortfolioDesign() {
           </div>
           {/* Step Label */}
           <p
-            className={`mt-2  text-sm font-medium ${
+            className={`mt-2 text-sm font-medium ${
               index === currentStep
                 ? "text-black"
                 : index <= maxAccessibleStep
@@ -174,11 +175,12 @@ function PortfolioDesign() {
     </div>
 
     {/* Current Step Content */}
-    <div className="w-full md:max-w-4xl mx-auto p-2 md:border-2 md:p-8   " >
+    <div className="w-full md:max-w-4xl mx-auto p-2 md:border-2 md:p-8">
       {renderStep()}
     </div>
   </SignedIn>
 </div>
+
 
 
   );

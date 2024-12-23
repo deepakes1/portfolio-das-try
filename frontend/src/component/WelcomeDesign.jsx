@@ -1,29 +1,3 @@
-// import { Button } from "@/components/ui/button";
-// import BoxReveal from "@/components/magicui/box-reveal";
-
-
-// function Welcome({ onStart }) {
-//   return (
-//     <div className='flex flex-col justify-center items-center text-center'  style={{ height: 'calc(100vh - 64px)' }}>
-//       <h1 className='mb-4 text-2xl font-black '>Welcome to the Portfolio Creator</h1>
-//       <p className='mb-4 text-lg '>Create a stunning portfolio to showcase your skills and projects!</p>
-//       <button
-//         onClick={onStart}
-//         className='bg-black text-green-100 px-6 py-3 rounded transition-all hover:rounded-3xl hover:bg-slate-300 hover:text-black'
-//       >
-//         Start Creating
-//       </button>
-//     </div>
-//   );
-// }
-
-
-
-
-// export default Welcome;
-
-
-
 
 import { Button } from "@/components/ui/button";
 import BoxReveal from "../components/ui/box-reveal";

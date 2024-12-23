@@ -44,7 +44,7 @@ const Home = () => {
     <div className="bg-white text-gray-800">
       {/* Hero Section */}
       <section className="relative bg-gray-900 md:flex flex-col justify-center text-white min-h-screen">
-        <div className="animate__animated animate__zoomIn max-w-7xl mx-auto px-6 py-20 gap-3 flex flex-col md:flex-row items-center justify-center h-full">
+        <div className="animate__animated animate__pulse max-w-7xl mx-auto px-6 py-20 gap-3 flex flex-col md:flex-row items-center justify-center h-full">
           {/* Left Content */}
           <div className="space-y-6 md:w-[45vw]">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">

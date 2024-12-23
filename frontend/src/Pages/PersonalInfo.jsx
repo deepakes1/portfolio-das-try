@@ -76,6 +76,7 @@ const PersonalInfo = ({ onNext }) => {
 
     if (user) {
       const user_id = user.primaryEmailAddress?.emailAddress
+      console.log(user_id)
       if (user_id) {
         setFormData((prevData) => ({ ...prevData, user_id, emailAddress: user_id }))
 
@@ -112,13 +113,55 @@ const PersonalInfo = ({ onNext }) => {
     }
   }, [user, isLoaded])
 
+  const validateFile = (file) => {
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  
+  if (!file) return { valid: true };
+  
+  const errors = [];
+  
+  // Check file size
+  if (file.size > MAX_FILE_SIZE) {
+    errors.push('File size must be less than 10MB');
+  }
+  
+  // Check file type
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    errors.push('File must be an image (JPEG, PNG, GIF, or WebP)');
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors
+  };
+};
+
+
   const handleChange = useCallback((name, value) => {
-    if (name === "profilePicture" && value instanceof FileList) {
-      setFormData((prevData) => ({ ...prevData, [name]: value[0] }))
-    } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value }))
+  if (name === "profilePicture" && value instanceof FileList) {
+    const file = value[0];
+    const validation = validateFile(file);
+    
+    if (!validation.valid) {
+      setErrors(prev => ({
+        ...prev,
+        profilePicture: validation.errors.join(', ')
+      }));
+      return;
     }
-  }, [])
+    
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.profilePicture;
+      return newErrors;
+    });
+    
+    setFormData(prevData => ({ ...prevData, [name]: file }));
+  } else {
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  }
+}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -167,6 +210,7 @@ const PersonalInfo = ({ onNext }) => {
       onNext()
     } catch (error) {
       console.error("Error submitting form:", error)
+      console.log("Error response:", error.response); 
       alert(`Error: ${error.response?.data?.message || "Something went wrong."}`)
     } finally {
       setIsSubmitting(false)
