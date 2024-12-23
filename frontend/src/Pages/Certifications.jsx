@@ -25,7 +25,7 @@ const INITIAL_CERTIFICATION = {
   credential_url: "",
 }
 
-const API_BASE_URL = 'https://portfolio-das-try-backend.vercel.app/'
+const API_BASE_URL = 'https://portfolio-das-try-backend.vercel.app'
 
 const Certifications = ({ onNext }) => {
   const { user, isLoaded } = useUser()
