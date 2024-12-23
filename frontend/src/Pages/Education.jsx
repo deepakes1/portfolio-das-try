@@ -424,6 +424,11 @@ const educationData = {
                             <TabsTrigger value="details">Details</TabsTrigger>
                             <TabsTrigger value="description">Description</TabsTrigger>
                           </TabsList>
+                          <TabsList className=" md:hidden w-full grid-cols-3">
+                            <TabsTrigger value="basic">Basic Info</TabsTrigger>
+                            <TabsTrigger value="details">Details</TabsTrigger>
+                            <TabsTrigger value="description">Description</TabsTrigger>
+                          </TabsList>
                           <TabsContent value="basic">
                             <div className="space-y-4">
                               <div>
